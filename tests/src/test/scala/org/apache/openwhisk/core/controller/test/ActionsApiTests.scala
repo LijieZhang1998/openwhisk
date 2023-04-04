@@ -483,7 +483,7 @@ class ActionsApiTests extends ControllerTestCommon with WhiskActionsApi {
     val exec: Exec = jsDefault(code)
     val content = JsObject("exec" -> exec.toJson)
     Put(s"$collectionPath/${aname()}", content) ~> Route.seal(routes(creds)) ~> check {
-      status should be(PayloadTooLarge)
+      status should be(ContentTooLarge)
       responseAs[String] should include {
         Messages.entityTooBig(SizeError(WhiskAction.execFieldName, exec.size, Exec.sizeLimit))
       }
@@ -512,7 +512,7 @@ class ActionsApiTests extends ControllerTestCommon with WhiskActionsApi {
     val content = JsObject("exec" -> exec.toJson)
     put(entityStore, action)
     Put(s"$collectionPath/${action.name}?overwrite=true", content) ~> Route.seal(routes(creds)) ~> check {
-      status should be(PayloadTooLarge)
+      status should be(ContentTooLarge)
       responseAs[String] should include {
         Messages.entityTooBig(SizeError(WhiskAction.execFieldName, exec.size, Exec.sizeLimit))
       }
@@ -528,7 +528,7 @@ class ActionsApiTests extends ControllerTestCommon with WhiskActionsApi {
     } reduce (_ ++ _)
     val content = s"""{"exec":{"kind":"nodejs:default","code":"??"},"parameters":$parameters}""".stripMargin
     Put(s"$collectionPath/${aname()}", content.parseJson.asJsObject) ~> Route.seal(routes(creds)) ~> check {
-      status should be(PayloadTooLarge)
+      status should be(ContentTooLarge)
       responseAs[String] should include {
         Messages.entityTooBig(SizeError(WhiskEntity.paramsFieldName, parameters.size, Parameters.sizeLimit))
       }
@@ -557,7 +557,7 @@ class ActionsApiTests extends ControllerTestCommon with WhiskActionsApi {
 
     val content = s"""{"exec":{"kind":"nodejs:default","code":"??"},"parameters":$parameters}""".stripMargin
     Put(s"$collectionPath/${aname()}", content.parseJson.asJsObject) ~> Route.seal(routes(credsWithLimits)) ~> check {
-      status should be(PayloadTooLarge)
+      status should be(ContentTooLarge)
       responseAs[String] should include {
         Messages.entityTooBig(SizeError(WhiskEntity.paramsFieldName, parameters.size, namespaceLimit))
       }
@@ -573,7 +573,7 @@ class ActionsApiTests extends ControllerTestCommon with WhiskActionsApi {
     } reduce (_ ++ _)
     val content = s"""{"exec":{"kind":"nodejs:default","code":"??"},"annotations":$annotations}""".stripMargin
     Put(s"$collectionPath/${aname()}", content.parseJson.asJsObject) ~> Route.seal(routes(creds)) ~> check {
-      status should be(PayloadTooLarge)
+      status should be(ContentTooLarge)
       responseAs[String] should include {
         Messages.entityTooBig(SizeError(WhiskEntity.annotationsFieldName, annotations.size, Parameters.sizeLimit))
       }
@@ -602,7 +602,7 @@ class ActionsApiTests extends ControllerTestCommon with WhiskActionsApi {
 
     val content = s"""{"exec":{"kind":"nodejs:default","code":"??"},"annotations":$annotations}""".stripMargin
     Put(s"$collectionPath/${aname()}", content.parseJson.asJsObject) ~> Route.seal(routes(credsWithLimits)) ~> check {
-      status should be(PayloadTooLarge)
+      status should be(ContentTooLarge)
       responseAs[String] should include {
         Messages.entityTooBig(SizeError(WhiskEntity.annotationsFieldName, annotations.size, namespaceLimit))
       }
@@ -950,7 +950,7 @@ class ActionsApiTests extends ControllerTestCommon with WhiskActionsApi {
     val code = "a" * (systemPayloadLimit.toBytes.toInt + 1)
     val content = s"""{"a":"$code"}""".stripMargin
     Post(s"$collectionPath/${aname()}", content.parseJson.asJsObject) ~> Route.seal(routes(creds)) ~> check {
-      status should be(PayloadTooLarge)
+      status should be(ContentTooLarge)
       responseAs[String] should include {
         Messages.entityTooBig(SizeError(fieldDescriptionForSizeError, (content.length).B, systemPayloadLimit.toBytes.B))
       }
@@ -962,7 +962,7 @@ class ActionsApiTests extends ControllerTestCommon with WhiskActionsApi {
     val code = "a" * (namespacePayloadLimit.toBytes.toInt + 1)
     val content = s"""{"a":"$code"}""".stripMargin
     Post(s"$collectionPath/${aname()}", content.parseJson.asJsObject) ~> Route.seal(routes(credsWithPayloadLimit)) ~> check {
-      status should be(PayloadTooLarge)
+      status should be(ContentTooLarge)
       responseAs[String] should include {
         Messages.entityTooBig(
           SizeError(fieldDescriptionForSizeError, (content.length).B, namespacePayloadLimit.toBytes.B))

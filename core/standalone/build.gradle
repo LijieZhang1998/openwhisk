@@ -43,6 +43,7 @@ task copySwagger(type: Copy) {
     def destFile = file("$buildDir/tmp/swagger/swagger-ui.tar")
     def uiDir = file("$buildDir/tmp/swagger/swagger-ui")
     if (!destFile.exists()) {
+        println("debug copySwagger: https://github.com/swagger-api/swagger-ui/archive/v${version}.tar.gz")
         ant.get(src: "https://github.com/swagger-api/swagger-ui/archive/v${version}.tar.gz", dest: destFile)
     }
     from(tarTree(resources.gzip(destFile))){

@@ -180,7 +180,7 @@ class SplunkLogStore(
   //based on http://doc.akka.io/docs/akka-http/10.0.6/scala/http/client-side/host-level.html
   val queue =
     Source
-      .queue[(HttpRequest, Promise[HttpResponse])](maxPendingRequests, OverflowStrategy.dropNew)
+      .queue[(HttpRequest, Promise[HttpResponse])](maxPendingRequests, OverflowStrategy.backpressure)
       .via(httpFlow.getOrElse(defaultHttpFlow))
       .toMat(Sink.foreach({
         case ((Success(resp), p)) => p.success(resp)

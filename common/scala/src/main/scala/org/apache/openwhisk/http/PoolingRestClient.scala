@@ -73,7 +73,7 @@ class PoolingRestClient(
   // filled in practice but can be useful, e.g., in tests starting many
   // asynchronous requests in a very short period of time.
   private val requestQueue = Source
-    .queue(queueSize, OverflowStrategy.dropNew)
+    .queue(queueSize, OverflowStrategy.backpressure)
     .via(httpFlow.getOrElse(pool))
     .toMat(Sink.foreach({
       case (Success(response), p) =>

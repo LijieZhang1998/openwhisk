@@ -265,6 +265,7 @@ dependencies {
     implementation project(':tools:admin')
 
     swaggerCodegen 'io.swagger:swagger-codegen-cli:2.4.29'
+    implementation "com.lightbend.akka.grpc:akka-grpc-runtime_2.12:2.3.0"
 }
 
 def keystorePath = new File(sourceSets.test.scala.outputDir, 'keystore')

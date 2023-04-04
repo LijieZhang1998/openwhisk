@@ -53,6 +53,7 @@ dependencies {
         exclude group: 'log4j'
         exclude group: 'jline'
     }
+    implementation "com.lightbend.akka.grpc:akka-grpc-runtime_2.12:2.3.0"
 }
 
 mainClassName = "org.apache.openwhisk.core.invoker.Invoker"

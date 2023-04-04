@@ -17,12 +17,11 @@
 
 package org.apache.openwhisk.core.limits
 
-import akka.http.scaladsl.model.StatusCodes.PayloadTooLarge
-import akka.http.scaladsl.model.StatusCodes.BadGateway
+import akka.http.scaladsl.model.StatusCodes.{BadGateway, ContentTooLarge}
+
 import java.io.File
 import java.io.PrintWriter
 import java.time.Instant
-
 import scala.concurrent.duration.{Duration, DurationInt}
 import scala.language.postfixOps
 import org.junit.runner.RunWith
@@ -39,16 +38,7 @@ import common.WskTestHelpers
 import common.WskActorSystem
 import spray.json._
 import spray.json.DefaultJsonProtocol._
-import org.apache.openwhisk.core.entity.{
-  ActivationEntityLimit,
-  ActivationResponse,
-  ByteSize,
-  ConcurrencyLimit,
-  Exec,
-  LogLimit,
-  MemoryLimit,
-  TimeLimit
-}
+import org.apache.openwhisk.core.entity.{ActivationEntityLimit, ActivationResponse, ByteSize, ConcurrencyLimit, Exec, LogLimit, MemoryLimit, TimeLimit}
 import org.apache.openwhisk.core.entity.size._
 import org.apache.openwhisk.http.Messages
 
@@ -366,7 +356,7 @@ class ActionLimitsTests extends TestHelpers with WskTestHelpers with WskActorSys
     pw.close
 
     assetHelper.withCleaner(wsk.action, name, confirmDelete = false) { (action, _) =>
-      action.create(name, Some(actionCode.getAbsolutePath), expectedExitCode = PayloadTooLarge.intValue)
+      action.create(name, Some(actionCode.getAbsolutePath), expectedExitCode = ContentTooLarge.intValue)
     }
 
     actionCode.delete
